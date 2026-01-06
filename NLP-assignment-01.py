@@ -10,6 +10,7 @@ import math
 import requests
 import json
 import pickle
+from io import BytesIO
 import random
 import time
 import itertools
@@ -256,6 +257,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
