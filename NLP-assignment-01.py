@@ -9,6 +9,9 @@ from collections import Counter
 import math
 import requests
 import json
+
+import joblib
+
 import pickle
 from io import BytesIO
 import random
@@ -175,7 +178,7 @@ with st.form(key='my_form'):
 
             file_url = "https://github.com/chyong007/nlp-spell-checker-app/blob/main/lm_model2.pkl"
             with requests.get(file_url) as file:
-                model = pickle.load(BytesIO(file.content)) 
+                model = joblib.load(file) 
   
             def bigram_prob(sent_arg):
                 if not sent_arg:
@@ -257,6 +260,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
