@@ -178,7 +178,7 @@ with st.form(key='my_form'):
 
             file_url = "https://raw.githubusercontent.com/chyong007/nlp-spell-checker-app/main/lm_model2.pkl"
             with requests.get(file_url) as file:
-                model = pickle.load(Bytes.IO(file)) 
+                model = pickle.load(BytesIO(file)) 
   
             def bigram_prob(sent_arg):
                 if not sent_arg:
@@ -260,6 +260,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
