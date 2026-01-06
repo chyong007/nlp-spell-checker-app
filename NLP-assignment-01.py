@@ -24,10 +24,10 @@ from iteration_utilities import random_product
 #Initiate corpus 
 #*****************************************************************************#
 
-file_path = "C:/Users/cy028986/apu/NLP/assignment/corpus_cleaned_tokens.json"
+file_url = "https://raw.githubusercontent.com/chyong007/nlp-spell-checker-app/refs/heads/main/corpus_cleaned_tokens.json"
 
-with open(file_path, 'r') as file:
-    corpus = json.load(file)
+with requests.get(file_url) as file:
+    corpus = json.loads(file.text)
 
 dictionary = set(corpus) #
 
@@ -253,4 +253,5 @@ with col4:
 #*****************************************************************************#
 #4.0 Program ends
 #*****************************************************************************#   
+
 st.write("Streamlit Version:", st.__version__)
