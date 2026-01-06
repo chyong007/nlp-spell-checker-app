@@ -10,6 +10,7 @@ from nltk.corpus import words, brown
 from collections import Counter
 
 import math
+import requests
 import json
 import random
 import time
@@ -255,3 +256,4 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
