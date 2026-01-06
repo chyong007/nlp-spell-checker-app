@@ -177,7 +177,7 @@ with st.form(key='my_form'):
                 candidates = list(set(batches))
 
             file_url = "https://github.com/chyong007/nlp-spell-checker-app/blob/main/lm_model2.pkl"
-            with requests.get(file_url) as file:
+            with requests.get(file_url, rb) as file:
                 model = joblib.load(file) 
   
             def bigram_prob(sent_arg):
@@ -260,6 +260,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
