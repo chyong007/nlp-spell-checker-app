@@ -1,4 +1,4 @@
 nltk
-joblib
+joblib==1.5.3
 pyxdameraulevenshtein
 iteration_utilities
