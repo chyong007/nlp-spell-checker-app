@@ -2,9 +2,6 @@
 #Libraries
 #*****************************************************************************#
 import streamlit as st
-
-import joblib
-
 import nltk
 from nltk.corpus import words, brown
 from collections import Counter
@@ -12,6 +9,7 @@ from collections import Counter
 import math
 import requests
 import json
+import pickle
 import random
 import time
 import itertools
@@ -258,6 +256,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
