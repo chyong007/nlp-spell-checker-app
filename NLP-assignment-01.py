@@ -102,7 +102,7 @@ with st.form(key='my_form'):
         def P_misspelling_given_word(misspelled, candidate):
             """Likelihood: exponential decay with distance."""
             dist = damerau_levenshtein_distance(misspelled, candidate)
-            return math.exp(-2 * dist)  # strong penalty for larger distances
+            return math.exp(-dist)  # strong penalty for larger distances
 
         def correct_spelling_bayes(misspelled, dictionary, max_suggestions=3, max_distance=2):
             scores = []
@@ -117,11 +117,6 @@ with st.form(key='my_form'):
                     likelihood = P_misspelling_given_word(misspelled, w)
                     posterior = prior * likelihood
                     scores.append((w, prior, likelihood, posterior, tag1))
-                #else:   #if misspelled word is not in dictionary and edit distance is not enough   
-                 #   prior = P_word(w)
-                  #  likelihood = 1e-9 
-                  #  posterior = prior * likelihood
-                  #  scores.append((misspelled, prior, likelihood, posterior, tag1))
     
             scores.sort(key=lambda x: x[3], reverse=True)  # sort by posterior
             return scores[:max_suggestions]
@@ -260,6 +255,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
