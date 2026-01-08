@@ -142,7 +142,7 @@ with st.form(key='my_form'):
 
         #2.1 Start inferencing process
         start_time = time.time()
-        with st.spinner("Waiting for model inference..."):
+        with st.spinner("Waiting for model inference...", show_time=True):
    
             cands = []
             cands1 = []
@@ -284,6 +284,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
