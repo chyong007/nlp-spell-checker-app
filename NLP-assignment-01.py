@@ -9,16 +9,14 @@ from collections import Counter
 import math
 import requests
 import json
-
-import joblib
-
-import pickle
-from io import BytesIO
 import random
-import time
 import itertools
 import random
 import re
+import time
+
+import joblib
+from io import BytesIO
 
 from pyxdameraulevenshtein import damerau_levenshtein_distance
 from iteration_utilities import random_product
@@ -53,6 +51,8 @@ if 'non_word' not in st.session_state:
     st.session_state['non_word'] = []
 if 'real_word' not in st.session_state:
     st.session_state['real_word'] = " "
+if 'total_time' not in st.session_state:
+    st.session_state['total time'] = " "
 
 #1.2 Input text area
 col1, col2 = st.columns([3,1])
@@ -71,6 +71,25 @@ for t in lw_input:
     cleaned = re.sub(r"[^a-zA-Z@#_']+", "", t) #a-zA-Z0-9@#:_
     if cleaned:
         clean_tokens.append(cleaned)
+
+normalized_tokens = [t.lower() for t in clean_tokens]
+
+joined_text = " ".join(normalized_tokens) # Join tokens temporarily to merge split contractions (e.g. auditors ' → auditors')
+joined_text = re.sub(r"\b(\w+)\s*'\s*(\w+)\b", r"\1' \2", joined_text)
+
+# Correct all possible apostrophe errors  
+replace_text = joined_text.replace("s' s", "s'_s")
+replace_text = replace_text.replace("' s", "'s")
+replace_text = replace_text.replace("s'_s", "s' s")
+replace_text = replace_text.replace(" s ", " ")
+
+pattern = r'\b(ii|iii|iv|vi|vii|viii|ix|xi|xii|xiii)\b' # Remove all roman numeric letters
+replace_text = re.sub(pattern, '',replace_text, flags=re.IGNORECASE)
+
+pattern = r'\b(b|c|d|e|f|g|h|j|k|l|m|n|o|p|q|r|t|u|v|w|x|y|z)\b' # Remove single letter words except "a" and "i"
+replace_text = re.sub(pattern, '',replace_text)
+
+final_tokens = replace_text.split() # Split again into final clean tokens
 
 #1.3 Create dictionary and search engine
 dict=sorted(list(dictionary))
@@ -122,6 +141,7 @@ with st.form(key='my_form'):
             return scores[:max_suggestions]
 
         #2.1 Start inferencing process
+        start_time = time.time()
         with st.spinner("Waiting for model inference..."):
    
             cands = []
@@ -131,7 +151,7 @@ with st.form(key='my_form'):
             non_word_err=[]
    
         #2.2 Candidates from edit distance    
-            for i in clean_tokens:
+            for i in final_tokens:
                 suggestions = correct_spelling_bayes(i, dictionary)
                 if len(suggestions) == 0:
                     non_word_err.append(i)
@@ -204,11 +224,20 @@ with st.form(key='my_form'):
 
             multiline_real = "\n\n".join(real_err)
             st.session_state['real_word'] = multiline_real
+
+        end_time = time.time()
+        total_time = end_time - start_time
+        st.session_state['total_time'] = total_time
       
 #*****************************************************************************#
 #3.0 Display results
 #*****************************************************************************#   
-st.success("Spelling check!")     
+if len(sent) > 0:
+    st.success("Spelling check complete!" + "\n\n" +
+                f"Task completed in {st.session_state['total_time']:.2f} seconds for total words of " + str(len(sent)))     
+else:
+    st.success("Spelling check!")
+    
 content = st.session_state['content']
 
 for word in output:
@@ -255,6 +284,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
