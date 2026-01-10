@@ -69,6 +69,7 @@ lw_input=[wd.lower() for wd in sent]
 # Normalize fancy quotes
 #text = re.sub(r"[“”]", '"', lw_input)
 #text = re.sub(r"[’]", "'", lw_input)
+text = lw_input
 
 # Tokenize with re.split()
 pattern = r"([@#]?\w+|:[\w_]+:|[!?.,…]+|[=]+|[^\w\s])"
@@ -297,6 +298,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
