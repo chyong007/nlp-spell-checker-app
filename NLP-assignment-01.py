@@ -64,10 +64,19 @@ with col1:
                         on_change=None)
 
 sent = input.split()
-lw_input=[wd.lower() for wd in sent]
+#lw_input=[wd.lower() for wd in sent]
+
+# Normalize fancy quotes
+text = re.sub(r"[“”]", '"', input)
+text = re.sub(r"[’]", "'", input)
+
+# Tokenize with re.split()
+pattern = r"([@#]?\w+|:[\w_]+:|[!?.,…]+|[=]+|[^\w\s])"
+raw_tokens = re.split(pattern, text)
+tokens = [tok.strip() for tok in raw_tokens if tok.strip()]
 
 clean_tokens = []
-for t in lw_input:
+for t in tokens:
     cleaned = re.sub(r"[^a-zA-Z@#_:']+", "", t) #a-zA-Z0-9@#:_
     if cleaned:
         clean_tokens.append(cleaned)
@@ -288,6 +297,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
