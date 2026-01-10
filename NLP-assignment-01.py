@@ -64,50 +64,36 @@ with col1:
                         on_change=None)
 
 sent = input.split()
+lw_input=[wd.lower() for wd in sent]
 
-if len(sent) == 0:
-    pass
-else:
-    lw_input=[wd.lower() for wd in sent]
-
-    # Normalize fancy quotes
-    #text = re.sub(r"[“”]", '"', lw_input)
-    #text = re.sub(r"[’]", "'", lw_input)
-    text = lw_input
-
-    # Tokenize with re.split()
-    pattern = r"([@#]?\w+|:[\w_]+:|[!?.,…]+|[=]+|[^\w\s])"
-    raw_tokens = re.split(pattern, text)
-    tokens = [tok.strip() for tok in raw_tokens if tok.strip()]
-
-    clean_tokens = []
-    for t in tokens:
-        cleaned = re.sub(r"[^a-zA-Z@#_:']+", "", t) #a-zA-Z0-9@#:_
-        if cleaned:
-            clean_tokens.append(cleaned)
+clean_tokens = []
+for t in lw_input:
+    cleaned = re.sub(r"[^a-zA-Z@#_:']+", "", t) #a-zA-Z0-9@#:_
+    if cleaned:
+        clean_tokens.append(cleaned)
         
-    normalized_tokens = [t.lower() for t in clean_tokens]
+normalized_tokens = [t.lower() for t in clean_tokens]
 
-    # Join tokens temporarily to merge split contractions (e.g. auditors ' → auditors')
-    joined_text = " ".join(normalized_tokens)
-    joined_text = re.sub(r"\b(\w+)\s*'\s*(\w+)\b", r"\1' \2", joined_text)
+# Join tokens temporarily to merge split contractions (e.g. auditors ' → auditors')
+joined_text = " ".join(normalized_tokens)
+joined_text = re.sub(r"\b(\w+)\s*'\s*(\w+)\b", r"\1' \2", joined_text)
 
-    # Correct all possible apostrophe errors  
-    replace_text = joined_text.replace("s' s", "s'_s")
-    replace_text = replace_text.replace("' s", "'s")
-    replace_text = replace_text.replace("s'_s", "s' s")
-    replace_text = replace_text.replace(" s ", " ")
+# Correct all possible apostrophe errors  
+replace_text = joined_text.replace("s' s", "s'_s")
+replace_text = replace_text.replace("' s", "'s")
+replace_text = replace_text.replace("s'_s", "s' s")
+replace_text = replace_text.replace(" s ", " ")
 
-    # Remove all roman numeric letters
-    pattern = r'\b(ii|iii|iv|vi|vii|viii|ix|xi|xii|xiii)\b'
-    replace_text = re.sub(pattern, '',replace_text, flags=re.IGNORECASE)
+# Remove all roman numeric letters
+pattern = r'\b(ii|iii|iv|vi|vii|viii|ix|xi|xii|xiii)\b'
+replace_text = re.sub(pattern, '',replace_text, flags=re.IGNORECASE)
 
-    # Remove single letter words except "a" and "i"
-    pattern = r'\b(b|c|d|e|f|g|h|j|k|l|m|n|o|p|q|r|t|u|v|w|x|y|z)\b'
-    replace_text = re.sub(pattern, '',replace_text)
+# Remove single letter words except "a" and "i"
+pattern = r'\b(b|c|d|e|f|g|h|j|k|l|m|n|o|p|q|r|t|u|v|w|x|y|z)\b'
+replace_text = re.sub(pattern, '',replace_text)
 
-    # Split again into final clean tokens
-    final_tokens = replace_text.split()
+# Split again into final clean tokens
+final_tokens = replace_text.split()
 
 #1.3 Create dictionary and search engine
 dict=sorted(list(dictionary))
@@ -302,6 +288,7 @@ with col4:
 #*****************************************************************************#   
 
 st.write("Streamlit Version:", st.__version__)
+
 
 
 
